@@ -1,0 +1,13 @@
+# ignore IntelliJ IDEA files
+.idea/
+*.iml
+
+# ignore target folders
+target/
+atlassian-ide-plugin.xml
+miniaf-web/src/main/webapp/resources/messages/
+
+# ignore Eclipse files
+.classpath
+.project
+.settings/
