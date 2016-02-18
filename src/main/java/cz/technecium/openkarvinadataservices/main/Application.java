@@ -1,7 +1,7 @@
 package cz.technecium.openkarvinadataservices.main;
 
 import cz.technecium.openkarvinadataservices.repository.CzechRatingListRepository;
-import cz.technecium.openkarvinadataservices.repository.FideRatingListRepository;
+import cz.technecium.openkarvinadataservices.repository.SaxFideRatingListRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -29,8 +29,8 @@ public class Application {
     }
 
     @Bean
-    public FideRatingListRepository fideRatingListRepository() {
-        return new FideRatingListRepository(new ClassPathResource("ratinglists/standard_rating_list_xml.xml"));
+    public SaxFideRatingListRepository fideRatingListRepository() {
+        return new SaxFideRatingListRepository(new ClassPathResource("ratinglists/standard_rating_list_xml.xml"));
     }
 
 }

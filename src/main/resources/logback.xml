@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-  <timestamp key="byDay" datePattern="yyyyMMdd'T'HHmmss"/>
 
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     <!-- Log message format -->
@@ -11,7 +10,7 @@
   </appender>
 
    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-      <file> log-${byDay}.txt </file>
+      <file>app.log</file>
       <append>true</append>
       <encoder>
          <pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
