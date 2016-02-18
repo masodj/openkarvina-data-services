@@ -1,6 +1,5 @@
 package cz.technecium.openkarvinadataservices.repository;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -26,10 +25,16 @@ public abstract class AbstractPlayerRepository implements PlayerRepository {
     protected final List<Player> players = new ArrayList<>();
     protected final Resource resource;
     protected final Comparator<Player> byName = (p1, p2) -> p1.getName().compareTo(p2.getName());
+    protected final Object locker = new Object();
 
     public AbstractPlayerRepository(Resource resource) {
         this.resource = resource;
+        readData();
+    }
+
+    private void readData() {
         try {
+
             logger.info(String.format("Reading players data from resource %s", resource.getFilename()));
 
             readResource();
@@ -62,13 +67,12 @@ public abstract class AbstractPlayerRepository implements PlayerRepository {
     }
 
     @Override
-    public void refreshRepository() {
-        try {
-            readResource();
-        } catch (Exception e) {
-            logger.error("Exception during reading resource", e);
+    public  void refreshRepository() {
+        synchronized(locker) {
+            players.clear();
+            readData();
         }
     }
 
-    protected abstract void readResource() throws FileNotFoundException, IOException, ParserConfigurationException, SAXException;
+    protected abstract void readResource() throws IOException, ParserConfigurationException, SAXException;
 }
