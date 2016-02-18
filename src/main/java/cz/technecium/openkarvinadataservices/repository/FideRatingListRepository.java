@@ -29,7 +29,7 @@ public class FideRatingListRepository extends AbstractPlayerRepository implement
     protected void readResource() throws ParserConfigurationException, IOException, SAXException {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-        Document doc = dBuilder.parse(resource.getFile());
+        Document doc = dBuilder.parse(resource.getInputStream());
         NodeList nodeList1 = doc.getElementsByTagName("playerslist");
         Node node = nodeList1.item(0);
         NodeList nodeList2 = node.getChildNodes();

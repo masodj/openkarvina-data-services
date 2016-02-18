@@ -25,12 +25,12 @@ public class Application {
 
     @Bean
     public CzechRatingListRepository czechRatingListRepository() {
-        return new CzechRatingListRepository(new ClassPathResource("lok_sm_cz.xls"));
+        return new CzechRatingListRepository(new ClassPathResource("ratinglists/lok_sm_cz.xls"));
     }
 
     @Bean
     public FideRatingListRepository fideRatingListRepository() {
-        return new FideRatingListRepository(new ClassPathResource("standard_rating_list_xml.xml"));
+        return new FideRatingListRepository(new ClassPathResource("ratinglists/standard_rating_list_xml.xml"));
     }
 
 }
