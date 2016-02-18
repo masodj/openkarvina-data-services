@@ -1,9 +1,10 @@
 package cz.technecium.openkarvinadataservices.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cz.technecium.openkarvinadataservices.domain.Player;
-import cz.technecium.openkarvinadataservices.domain.RepositoryType;
 import cz.technecium.openkarvinadataservices.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,22 +18,17 @@ import org.springframework.stereotype.Service;
 public class PlayerService {
 
     @Autowired
-    PlayerRepository czechRatingListRepository;
+    Map<String, PlayerRepository> repos = new HashMap<>();
 
-    @Autowired
-    PlayerRepository fideRatingListRepository;
+    public List<Player> findPlayersByName(final String repository, String name) {
+        return repos.get(repository).findPlayersByName(name);
+    }
 
-
-    public List<Player> findPlayersByName(final RepositoryType repository, String name) {
-        if (repository == RepositoryType.CZE) {
-            return czechRatingListRepository.findPlayersByName(name);
-        } else {
-            return fideRatingListRepository.findPlayersByName(name);
-        }
+    public Player findPlayersById(final String repository, final long id) {
+        return repos.get(repository).findPlayerById(id);
     }
 
     public void refreshRepositories() {
-        czechRatingListRepository.refreshRepository();
-        fideRatingListRepository.refreshRepository();
+        repos.values().forEach(PlayerRepository::refreshRepository);
     }
 }

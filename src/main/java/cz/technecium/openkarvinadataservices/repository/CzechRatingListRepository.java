@@ -1,7 +1,6 @@
 package cz.technecium.openkarvinadataservices.repository;
 
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
@@ -26,7 +25,7 @@ public class CzechRatingListRepository extends AbstractPlayerRepository implemen
         super(resource);
     }
 
-    protected void readResource() throws FileNotFoundException, IOException {
+    protected void readResource() throws IOException{
         InputStream file = resource.getInputStream();
         HSSFWorkbook workbook = new HSSFWorkbook(file);
         sheet = workbook.getSheetAt(0);
