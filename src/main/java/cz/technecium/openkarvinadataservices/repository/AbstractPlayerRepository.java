@@ -24,7 +24,7 @@ public abstract class AbstractPlayerRepository implements PlayerRepository {
     protected static final Logger logger = LoggerFactory.getLogger(AbstractPlayerRepository.class);
     protected final List<Player> players = new ArrayList<>();
     protected final Resource resource;
-    protected final Comparator<Player> byName = (p1, p2) -> p1.getName().compareTo(p2.getName());
+    protected final Comparator<Player> byName = Comparator.comparing(Player::getName);
     protected final Object locker = new Object();
 
     public AbstractPlayerRepository(Resource resource) {

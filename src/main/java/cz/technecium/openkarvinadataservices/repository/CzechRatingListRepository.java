@@ -19,7 +19,6 @@ import org.springframework.core.io.Resource;
  */
 public class CzechRatingListRepository extends AbstractPlayerRepository implements PlayerRepository {
 
-    private HSSFSheet sheet;
 
     public CzechRatingListRepository(Resource resource) {
         super(resource);
@@ -28,31 +27,31 @@ public class CzechRatingListRepository extends AbstractPlayerRepository implemen
     protected void readResource() throws IOException{
         InputStream file = resource.getInputStream();
         HSSFWorkbook workbook = new HSSFWorkbook(file);
-        sheet = workbook.getSheetAt(0);
+        HSSFSheet sheet = workbook.getSheetAt(0);
         Iterator<Row> rowIterator = sheet.iterator();
         rowIterator.next();
         while (rowIterator.hasNext()) {
             Row row = rowIterator.next();
-            Player player = readPlayer(row);
+            Player player = readPlayer(sheet, row);
             players.add(player);
         }
     }
 
-    private Player readPlayer(Row row) {
+    private Player readPlayer(final HSSFSheet sheet, Row row) {
         Player p = new Player();
-        p.setClub(getCellByColumnName(ColumnName.CLUB, row));
-        p.setName(getCellByColumnName(ColumnName.NAME, row));
-        p.setTitle(getCellByColumnName(ColumnName.FIDE_TITLE, row));
+        p.setClub(getCellByColumnName(sheet, ColumnName.CLUB, row));
+        p.setName(getCellByColumnName(sheet, ColumnName.NAME, row));
+        p.setTitle(getCellByColumnName(sheet, ColumnName.FIDE_TITLE, row));
         PlayerIdentifier playerIdentifier = new PlayerIdentifier();
-        playerIdentifier.setCrId((int) (Double.parseDouble(getCellByColumnName(ColumnName.LOC_ID, row))));
-        playerIdentifier.setFideId((int) (Double.parseDouble(getCellByColumnName(ColumnName.FIDE_ID, row))));
+        playerIdentifier.setCrId((int) (Double.parseDouble(getCellByColumnName(sheet, ColumnName.LOC_ID, row))));
+        playerIdentifier.setFideId((int) (Double.parseDouble(getCellByColumnName(sheet, ColumnName.FIDE_ID, row))));
         p.setPlayerIdentifier(playerIdentifier);
-        p.setFideRating((int) (Double.parseDouble(getCellByColumnName(ColumnName.FIDE_ELO, row))));
-        p.setCzRating((int) (Double.parseDouble(getCellByColumnName(ColumnName.LOC_ELO, row))));
+        p.setFideRating((int) (Double.parseDouble(getCellByColumnName(sheet, ColumnName.FIDE_ELO, row))));
+        p.setCzRating((int) (Double.parseDouble(getCellByColumnName(sheet, ColumnName.LOC_ELO, row))));
         return p;
     }
 
-    private String getCellByColumnName(ColumnName name, Row row) {
+    private String getCellByColumnName(final HSSFSheet sheet, ColumnName name, Row row) {
         Row r = sheet.getRow(0);
         int patchColumn = -1;
         for (int cn = 0; cn < r.getLastCellNum(); cn++) {
