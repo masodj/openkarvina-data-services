@@ -42,6 +42,8 @@ public class CzechRatingListRepository extends AbstractPlayerRepository implemen
         p.setClub(getCellByColumnName(sheet, ColumnName.CLUB, row));
         p.setName(getCellByColumnName(sheet, ColumnName.NAME, row));
         p.setTitle(getCellByColumnName(sheet, ColumnName.FIDE_TITLE, row));
+        String birthday = getCellByColumnName(sheet, ColumnName.BIRTHDAY, row);
+        p.setBirthday(birthday.startsWith("00.00.") ? birthday.substring(6) : birthday);
         PlayerIdentifier playerIdentifier = new PlayerIdentifier();
         playerIdentifier.setCrId((int) (Double.parseDouble(getCellByColumnName(sheet, ColumnName.LOC_ID, row))));
         playerIdentifier.setFideId((int) (Double.parseDouble(getCellByColumnName(sheet, ColumnName.FIDE_ID, row))));

@@ -19,4 +19,5 @@ public class Player {
     private int czRating;
     private String title;
     private String nationality;
+    private String birthday;
 }

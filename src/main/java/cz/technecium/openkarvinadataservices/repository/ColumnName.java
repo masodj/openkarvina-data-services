@@ -13,7 +13,8 @@ public enum ColumnName {
     CLUB("ClubName"),
     FIDE_ID("FIDE_no"),
     LOC_ID("ID_no"),
-    FIDE_TITLE("Title");
+    FIDE_TITLE("Title"),
+    BIRTHDAY("BirthDay");
 
     private String columnName;
 

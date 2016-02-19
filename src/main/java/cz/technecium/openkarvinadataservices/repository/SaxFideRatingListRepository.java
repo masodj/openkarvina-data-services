@@ -21,7 +21,6 @@ import org.xml.sax.helpers.DefaultHandler;
 public class SaxFideRatingListRepository extends AbstractPlayerRepository implements PlayerRepository {
 
     private Player currentPlayer;
-    ;
     private PlayerIdentifier currPlayerIdentifier;
 
     public SaxFideRatingListRepository(final Resource resource) {
@@ -34,16 +33,14 @@ public class SaxFideRatingListRepository extends AbstractPlayerRepository implem
         SAXParser saxParser = factory.newSAXParser();
 
         DefaultHandler handler = new DefaultHandler() {
-            boolean fideid = false;
+            boolean fideId = false;
             boolean name = false;
             boolean title = false;
             boolean rating = false;
             boolean country = false;
+            boolean birthday = false;
 
-            public void startElement(String uri, String localName, String qName,
-                    Attributes attributes) throws SAXException {
-
-
+            public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
                 if (qName.equalsIgnoreCase("player")) {
                     currentPlayer = new Player();
                     currPlayerIdentifier = new PlayerIdentifier();
@@ -51,7 +48,7 @@ public class SaxFideRatingListRepository extends AbstractPlayerRepository implem
                 }
 
                 if (qName.equalsIgnoreCase("fideid")) {
-                    fideid = true;
+                    fideId = true;
                 }
 
                 if (qName.equalsIgnoreCase("name")) {
@@ -70,10 +67,12 @@ public class SaxFideRatingListRepository extends AbstractPlayerRepository implem
                     country = true;
                 }
 
+                if (qName.equalsIgnoreCase("birthday")) {
+                    birthday = true;
+                }
             }
 
-            public void endElement(String uri, String localName,
-                    String qName) throws SAXException {
+            public void endElement(String uri, String localName, String qName) throws SAXException {
                 if (qName.equalsIgnoreCase("player")) {
                     players.add(currentPlayer);
                 }
@@ -82,13 +81,9 @@ public class SaxFideRatingListRepository extends AbstractPlayerRepository implem
             public void characters(char ch[], int start, int length) throws SAXException {
                 String parsed = new String(ch, start, length).trim();
 
-                if (parsed.isEmpty()) {
-                    return;
-                }
-
-                if (fideid) {
+                if (fideId) {
                     currPlayerIdentifier.setFideId(Long.parseLong(parsed));
-                    fideid = false;
+                    fideId = false;
                 }
 
                 if (name) {
@@ -111,9 +106,13 @@ public class SaxFideRatingListRepository extends AbstractPlayerRepository implem
                     country = false;
                 }
 
+                if(birthday) {
+                    currentPlayer.setBirthday(parsed);
+                    birthday = false;
+                }
             }
-
         };
+
         saxParser.parse(resource.getInputStream(), handler);
     }
 }
