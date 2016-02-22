@@ -2,18 +2,16 @@ package cz.technecium.openkarvinadataservices.repository;
 
 import java.io.IOException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 import cz.technecium.openkarvinadataservices.domain.Player;
 import cz.technecium.openkarvinadataservices.domain.PlayerIdentifier;
 import org.springframework.core.io.Resource;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
 /**
  *
@@ -22,38 +20,100 @@ import org.xml.sax.SAXException;
  */
 public class FideRatingListRepository extends AbstractPlayerRepository implements PlayerRepository {
 
-    public FideRatingListRepository(Resource resource) {
+    private Player currentPlayer;
+    private PlayerIdentifier currPlayerIdentifier;
+
+    public FideRatingListRepository(final Resource resource) {
         super(resource);
     }
 
-    protected void readResource() throws ParserConfigurationException, IOException, SAXException {
-        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-        Document doc = dBuilder.parse(resource.getInputStream());
-        NodeList nodeList1 = doc.getElementsByTagName("playerslist");
-        Node node = nodeList1.item(0);
-        NodeList nodeList2 = node.getChildNodes();
+    @Override
+    protected void readResource() throws IOException, ParserConfigurationException, SAXException {
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        SAXParser saxParser = factory.newSAXParser();
 
-        for (int i = 0; i < nodeList2.getLength(); i++) {
-            Node playerNode = nodeList2.item(i);
+        DefaultHandler handler = new DefaultHandler() {
+            boolean fideId = false;
+            boolean name = false;
+            boolean title = false;
+            boolean rating = false;
+            boolean country = false;
+            boolean birthday = false;
 
-            if (playerNode.getNodeType() == Node.ELEMENT_NODE) {
-                Element element = (Element) playerNode;
-                players.add(mapToPlayer(element));
+            public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+                if (qName.equalsIgnoreCase("player")) {
+                    currentPlayer = new Player();
+                    currPlayerIdentifier = new PlayerIdentifier();
+                    currentPlayer.setPlayerIdentifier(currPlayerIdentifier);
+                }
+
+                if (qName.equalsIgnoreCase("fideid")) {
+                    fideId = true;
+                }
+
+                if (qName.equalsIgnoreCase("name")) {
+                    name = true;
+                }
+
+                if (qName.equalsIgnoreCase("title")) {
+                    title = true;
+                }
+
+                if (qName.equalsIgnoreCase("rating")) {
+                    rating = true;
+                }
+
+                if (qName.equalsIgnoreCase("country")) {
+                    country = true;
+                }
+
+                if (qName.equalsIgnoreCase("birthday")) {
+                    birthday = true;
+                }
             }
-        }
-    }
 
-    private Player mapToPlayer(final Element element) {
-        PlayerIdentifier identifier = new PlayerIdentifier();
-        Player player = new Player();
-        player.setPlayerIdentifier(identifier);
+            public void endElement(String uri, String localName, String qName) throws SAXException {
+                if (qName.equalsIgnoreCase("player")) {
+                    players.add(currentPlayer);
+                }
+            }
 
-        identifier.setFideId(Long.parseLong(element.getElementsByTagName("fideid").item(0).getTextContent()));
-        player.setName(element.getElementsByTagName("name").item(0).getTextContent());
-        player.setTitle(element.getElementsByTagName("title").item(0).getTextContent());
-        player.setFideRating(Integer.parseInt(element.getElementsByTagName("rating").item(0).getTextContent()));
-        player.setNationality(element.getElementsByTagName("country").item(0).getTextContent());
-        return player;
+            public void characters(char ch[], int start, int length) throws SAXException {
+                String parsed = new String(ch, start, length).trim();
+
+                if (fideId) {
+                    currPlayerIdentifier.setFideId(Long.parseLong(parsed));
+                    fideId = false;
+                }
+
+                if (name) {
+                    currentPlayer.setName(parsed);
+                    name = false;
+                }
+
+                if (title) {
+                    currentPlayer.setTitle(parsed);
+                    title = false;
+                }
+
+                if (rating) {
+                    currentPlayer.setFideRating(Integer.parseInt(parsed));
+                    rating = false;
+                }
+
+                if (country) {
+                    currentPlayer.setFederation(parsed);
+                    country = false;
+                }
+
+                if(birthday) {
+                    currentPlayer.setBirthday(parsed);
+                    birthday = false;
+                }
+            }
+        };
+
+        saxParser.parse(resource.getInputStream(), handler);
     }
 }
+

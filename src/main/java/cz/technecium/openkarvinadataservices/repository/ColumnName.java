@@ -14,6 +14,7 @@ public enum ColumnName {
     FIDE_ID("FIDE_no"),
     LOC_ID("ID_no"),
     FIDE_TITLE("Title"),
+    FEDERATION("Fed"),
     BIRTHDAY("BirthDay");
 
     private String columnName;

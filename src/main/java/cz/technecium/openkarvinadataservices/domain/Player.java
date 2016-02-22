@@ -18,6 +18,6 @@ public class Player {
     private int fideRating;
     private int czRating;
     private String title;
-    private String nationality;
+    private String federation;
     private String birthday;
 }
