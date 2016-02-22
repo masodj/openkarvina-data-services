@@ -28,6 +28,14 @@ public class FideRatingListRepository extends AbstractPlayerRepository implement
     }
 
     @Override
+    public Player findPlayerById(final long id) {
+        return players.stream()
+                .filter(player -> player.getPlayerIdentifier().getFideId() == id)
+                .findFirst()
+                .get();
+    }
+
+    @Override
     protected void readResource() throws IOException, ParserConfigurationException, SAXException {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser saxParser = factory.newSAXParser();
@@ -112,7 +120,6 @@ public class FideRatingListRepository extends AbstractPlayerRepository implement
                 }
             }
         };
-
         saxParser.parse(resource.getInputStream(), handler);
     }
 }

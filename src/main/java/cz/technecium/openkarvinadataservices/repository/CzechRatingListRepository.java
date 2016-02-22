@@ -81,4 +81,13 @@ public class CzechRatingListRepository extends AbstractPlayerRepository implemen
         }
         return "";
     }
+
+
+    @Override
+    public Player findPlayerById(final long id) {
+        return players.stream()
+                .filter(player -> player.getPlayerIdentifier().getCrId() == id)
+                .findFirst()
+                .get();
+    }
 }

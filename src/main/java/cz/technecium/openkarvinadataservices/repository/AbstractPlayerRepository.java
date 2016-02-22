@@ -50,12 +50,7 @@ public abstract class AbstractPlayerRepository implements PlayerRepository {
     }
 
     @Override
-    public Player findPlayerById(final long id) {
-        return players.stream()
-                .filter(player -> player.getPlayerIdentifier().getCrId() == id)
-                .findFirst()
-                .get();
-    }
+    public abstract Player findPlayerById(final long id);
 
     @Override
     public List<Player> findPlayersByName(String name) {
