@@ -31,7 +31,7 @@ public class Application {
 
     @Bean
     public PlayerRepository fideRatingListRepository() {
-        return new FideRatingListRepository(new ClassPathResource("ratinglists/standard_rating_list_xml.xml"));
+        return new FideRatingListRepository(new ClassPathResource("ratinglists/standard_rating_list.xml"));
     }
 
 }
