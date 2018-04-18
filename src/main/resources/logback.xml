@@ -18,7 +18,7 @@
    </appender>
 
     <!-- Setting the root level of logging to INFO -->
-    <root level="trace">
+    <root level="info">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="FILE"/>
     </root>
