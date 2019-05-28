@@ -90,7 +90,7 @@ public class FideRatingListRepository extends AbstractPlayerRepository implement
                 String parsed = new String(ch, start, length).trim();
 
                 if (fideId) {
-                    currPlayerIdentifier.setFideId(Long.parseLong(parsed));
+                    currPlayerIdentifier.setFideId(Integer.parseInt(parsed));
                     fideId = false;
                 }
 

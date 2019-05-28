@@ -15,8 +15,8 @@ public class Player {
     private PlayerIdentifier playerIdentifier;
     private String name;
     private String club;
-    private int fideRating;
-    private int czRating;
+    private Integer fideRating;
+    private Integer czRating;
     private String title;
     private String federation;
     private String birthday;

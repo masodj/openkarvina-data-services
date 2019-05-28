@@ -47,9 +47,15 @@ public class CzechRatingListRepository extends AbstractPlayerRepository implemen
         String birthday = getCellByColumnName(sheet, ColumnName.BIRTHDAY, row);
         player.setBirthday(birthday.startsWith("00.00.") ? birthday.substring(6) : birthday);
         PlayerIdentifier playerIdentifier = new PlayerIdentifier();
-        playerIdentifier.setCrId((int) (Double.parseDouble(getCellByColumnName(sheet, ColumnName.LOC_ID, row))));
-        playerIdentifier.setFideId((int) (Double.parseDouble(getCellByColumnName(sheet, ColumnName.FIDE_ID, row))));
+
+        String crId = getCellByColumnName(sheet, ColumnName.LOC_ID, row);
+        playerIdentifier.setCrId(crId.isEmpty() ? null : (int) Double.parseDouble(crId));
+
+        String fideId = getCellByColumnName(sheet, ColumnName.FIDE_ID, row);
+        playerIdentifier.setFideId(fideId.isEmpty() ? null : (int) Double.parseDouble(fideId));
+
         player.setPlayerIdentifier(playerIdentifier);
+
         player.setFideRating((int) (Double.parseDouble(getCellByColumnName(sheet, ColumnName.FIDE_ELO, row))));
         player.setCzRating((int) (Double.parseDouble(getCellByColumnName(sheet, ColumnName.LOC_ELO, row))));
         return player;
@@ -72,6 +78,10 @@ public class CzechRatingListRepository extends AbstractPlayerRepository implemen
             }
         }
         Cell cell = row.getCell(patchColumn);
+        if (cell == null) {
+            return "";
+        }
+
         if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
             return cell.getStringCellValue();
         }

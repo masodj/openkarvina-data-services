@@ -12,6 +12,6 @@ import lombok.Setter;
 @Setter
 public class PlayerIdentifier {
 
-    private long fideId;
-    private long crId;
+    private Integer fideId;
+    private Integer crId;
 }
