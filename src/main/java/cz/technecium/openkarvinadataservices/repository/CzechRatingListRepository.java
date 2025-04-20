@@ -10,6 +10,7 @@ import cz.technecium.openkarvinadataservices.domain.PlayerIdentifier;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.core.io.Resource;
 
@@ -66,10 +67,10 @@ public class CzechRatingListRepository extends AbstractPlayerRepository implemen
         int patchColumn = -1;
         for (int cn = 0; cn < r.getLastCellNum(); cn++) {
             Cell c = r.getCell(cn);
-            if (c == null || c.getCellType() == Cell.CELL_TYPE_BLANK) {
+            if (c == null || c.getCellType() == CellType.BLANK) {
                 continue;
             }
-            if (c.getCellType() == Cell.CELL_TYPE_STRING) {
+            if (c.getCellType() == CellType.STRING) {
                 String text = c.getStringCellValue();
                 if (name.getColumnName().equals(text)) {
                     patchColumn = cn;
@@ -82,11 +83,11 @@ public class CzechRatingListRepository extends AbstractPlayerRepository implemen
             return "";
         }
 
-        if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
+        if (cell.getCellType() == CellType.STRING) {
             return cell.getStringCellValue();
         }
 
-        if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+        if (cell.getCellType() == CellType.NUMERIC) {
             return cell.getNumericCellValue() + "";
         }
         return "";
@@ -98,6 +99,6 @@ public class CzechRatingListRepository extends AbstractPlayerRepository implemen
         return players.stream()
                 .filter(player -> player.getPlayerIdentifier().getCrId() == id)
                 .findFirst()
-                .get();
+                .orElseThrow();
     }
 }
